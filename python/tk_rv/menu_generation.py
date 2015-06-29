@@ -72,6 +72,18 @@ class MenuGenerator(object):
             if cmd.get_type() == "context_menu":
                 menu_item = cmd.define_menu_item()
                 self._context_menu[1].append(menu_item)
+            else:
+                app_name = cmd.get_app_name()
+                if app_name is None:
+                    app_name = "Other Items"
+                if not app_name in commands_by_app:
+                    commands_by_app[app_name] = []
+                menu_item = cmd.define_menu_item()
+                commands_by_app[app_name].append(menu_item)
+
+        # add app-specific menus to the menu handle
+        for menu_name, menu_items in commands_by_app.iteritems():
+            self._menu_handle.append((menu_name, menu_items))
 
         # update sgtk menu
         sgtk_menu = [(self._menu_name, self._menu_handle)]
