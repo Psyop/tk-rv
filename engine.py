@@ -29,6 +29,23 @@ class RVEngine(Engine):
 
         self._ui_enabled = True
 
+    def _get_dialog_parent(self):
+        """
+        Get the QWidget parent for all dialogs created through
+        show_dialog & show_modal.
+        """
+        # Find a parent for the dialog - this should be the RV mainWindow()
+        from tank.platform.qt import QtGui
+        import shiboken
+
+        ptr = None
+        for w in QtGui.qApp.topLevelWidgets():
+            if w.inherits("QMainWindow"):
+                ptr = shiboken.getCppPointer(w)
+        if ptr:
+            return shiboken.wrapInstance(long(ptr[0]), QtGui.QMainWindow)
+        return None
+
     def pre_app_init(self):
         # This probably shouldn't be here but it helps the Toolkit tools to look
         # right but has the side effect of changing RV's look and feel.
