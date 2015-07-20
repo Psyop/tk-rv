@@ -6,6 +6,7 @@ import os
 import tank
 import inspect
 import logging
+import subprocess
 
 from tank.platform import Engine
 from tank import TankError
@@ -94,3 +95,12 @@ class RVEngine(Engine):
     def log_error(self, msg):
         msg = "ERROR: Shotgun - %s" % msg
         print msg
+
+    ##########################################################################################
+    # subprocess
+
+    def launch_subprocess(self, cmd, path, env):
+        """ Launches a subprocess using subprocess.Popen
+        """
+
+        return subprocess.Popen(cmd, cwd=os.path.dirname(path), env=env, shell=False)
