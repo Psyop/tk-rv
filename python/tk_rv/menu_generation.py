@@ -37,19 +37,12 @@ class MenuGenerator(object):
         sgtk_menu = [(self._menu_name, [("_", None)])]
         commands.defineModeMenu(self._toolkit_rv_mode_name, sgtk_menu)
 
-        # add new session item
-        new_session_item = ("New Session", self._launch_new_session, None, None)
-        self._menu_handle.append(new_session_item)
-
-        # add separator
-        separator_item = ("_", None)
-        self._menu_handle.append(separator_item)
-
         # add context submenu
         self._context_menu = self._add_context_menu()
         self._menu_handle.append(self._context_menu)
 
         # add separator
+        separator_item = ("_", None)
         self._menu_handle.append(separator_item)
 
         # create menu item for each command
@@ -158,21 +151,6 @@ class MenuGenerator(object):
             exit_code = os.system(cmd)
             if exit_code != 0:
                 self._engine.log_error("Failed to launch '%s'!" % cmd)
-
-    ##########################################################################################
-    # new session
-
-    def _launch_new_session(self, event):
-        """ Launches subprocess which will start a new rv session with the current tank context. """
-
-        try:
-            env_dict = os.environ
-            path = env_dict.get("RV_APP_RV", "")
-            cmd = [path]
-
-            self._engine.launch_subprocess(cmd, path, env_dict)
-        except:
-            print "ERROR: Unable to start new RV session with the current project's context."
 
 class AppCommand(object):
     """
